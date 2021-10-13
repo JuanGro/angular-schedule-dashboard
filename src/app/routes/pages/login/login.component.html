@@ -1,0 +1,81 @@
+<div class="wrapper">
+    <div class="block-center mt-xl wd-85">
+        <!-- START panel-->
+        <div class="panel panel-info panel-flat">
+            <div class="panel-heading text-center">
+                <img class="img-responsive" src="assets/img/logo.svg" alt="App Logo" />
+            </div>
+
+            <div class="panel-body">
+                <p class="text-center pv">Inicia sesión</p>
+
+                <!-- Start form -->
+                <!-- #registerForm="ngForm" calls the form methods to the component -->
+                <!-- (ngSubmit)="submitRegisterForm(registerForm.value)" executes the submitRegisterForm method sending the values of each field -->
+                <form #registerForm="ngForm" novalidate (ngSubmit)="submitRegisterForm(registerForm.value, registerForm)">
+
+                    <!-- First row -->
+                    <div class="form-group row">
+                        <!-- email field -->
+                        <div class="col-md-12" [class.has-success]="!email.errors && email.touched" [class.has-danger]="email.errors && email.touched">
+                            <label for="recipient-email" class="form-control-label">Correo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-envelope"></i>
+                            </span>
+                                <input type="text" id="recipient-email" placeholder="A01201234" class="form-control" maxlength="9" name="email" [(ngModel)]="user.email" #email="ngModel" [class.form-control-success]="!email.errors && email.touched" [class.form-control-danger]="email.errors && email.touched"
+                                    required>
+                                <span class="input-group-addon">{{ configuration.institutionalDomain }}</span>
+                            </div>
+
+                            <!-- Feedback email -->
+                            <div *ngIf="email.errors && email.touched">
+                                <div [hidden]="!email.errors.required">
+                                    <div class="text-danger">El correo es obligatorio.</div>
+                                </div>
+                                <div [hidden]="!email.errors.maxlength">
+                                    <div class="text-danger">El correo excede la longitud permitida.</div>
+                                </div>
+                                <div [hidden]="!email.errors.pattern">
+                                    <div class="text-danger">El correo no es válido.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Third row -->
+                    <div class="form-group row">
+
+                        <div class="col-md-12" [class.has-success]="!password.errors && password.touched" [class.has-danger]="password.errors && password.touched">
+                            <!-- Password field -->
+                            <label for="recipient-password" class="form-control-label">Contraseña:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-lock"></i>
+                                                    </span>
+                                <input type="password" class="form-control" id="recipient-password" placeholder="********" minlength="8" maxlength="16" name="password" [(ngModel)]="user.password" #password="ngModel" [class.form-control-success]="!password.errors && password.touched"
+                                    [class.form-control-danger]="password.errors && password.touched" required>
+                            </div>
+                            <!-- Feedback password -->
+                            <div *ngIf="password.errors && password.touched">
+                                <div [hidden]="!password.errors.required">
+                                    <div class="text-danger">La contraseña es obligatoria.</div>
+                                </div>
+                                <div [hidden]="!password.errors.minlength">
+                                    <div class="text-danger">La contraseña es menor a la longitud permitida.</div>
+                                </div>
+                                <div [hidden]="!password.errors.maxlength">
+                                    <div class="text-danger">La contraseña excede la longitud permitida.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button [disabled]="!registerForm.form.valid" class="btn btn-block btn-info mt-lg" type="submit">Entrar</button>
+                </form>
+
+                <!-- <div class="alert alert-danger text-center" ></div> -->
+                <p class="pt-lg text-center">¿Aún no creas tu cuenta?</p>
+                <a class="btn btn-block btn-default" [routerLink]="'/register'">¡Regístrate!</a>
+            </div>
+        </div>
+    </div>
+</div>

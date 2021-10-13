@@ -1,0 +1,227 @@
+<!-- START panel-->
+<div class="panel b">
+    <div class="panel-body text-center">
+        <h2>{{ nameStudyProgram }}</h2>
+
+        <div class="container container-md">
+            <div class="row">
+                <div class="col-md-12">
+                    <a class="btn btn-block btn-info mt-lg" [routerLink]="['/career-director/study-program-list']">Ver otros planes de estudios</a>
+                    <!-- Periods -->
+                    <!-- <button class="btn btn-block btn-warning mt-lg" (click)="periodsModal.show()">Añadir o editar periodos</button> -->
+                    <!-- Button to add a new course -->
+                    <button class="btn btn-block btn-danger mt-lg" (click)="createCourse(courseForm)" (click)="courseModal.show()">Crear curso</button>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            Cursos disponibles <a style="color:white; text-decoration:none" tooltip="Cursos previamente creados por otros directores de carrera"><em class="icon-question"></em></a>
+                        </div>
+                        <div class="panel-body" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="courses">
+                          <input class="form-control" type="text" name="term" placeholder="Search"/>
+                          <hr/>
+                          <ul class="list-group">
+                            <li *ngFor="let course of courses; let i = index" class="list-group-item" dnd-sortable [sortableIndex]="i" (click)="editCourse(course, courseForm)" (click)="courseModal.show()">{{ course.code }} {{ course.name }}</li>
+                          </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8" *ngIf="periodListForCurrentStudyProgram">
+                    <div class="col-md-6" *ngFor="let period of coursesInPeriod; let x = index">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                {{ periodListForCurrentStudyProgram[x].name }}
+                            </div>
+                            <div class="panel-body" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="period">
+                                <ul class="list-group">
+                                    <li *ngFor="let course of period; let i = index" class="list-group-item" dnd-sortable [sortableIndex]="i" (click)="editCourse(course, courseForm)" (click)="courseModal.show()">{{ course.code }} {{ course.name }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12" *ngIf="periodListForCurrentStudyProgram.length == 0">
+                  {{ messageIfNoPeriods }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal to create or edit a course -->
+<div class="modal fade" bsModal #courseModal="bs-modal" tabindex="-1" role="dialog" aria-labelledby="courseModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-label="Close" (click)="courseModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Curso</h4>
+            </div>
+            <div class="modal-body">
+                <form #courseForm="ngForm" novalidate (ngSubmit)="submitCourseForm(courseForm.value, courseForm, courseModal)">
+
+                  <!-- Code -->
+                  <div class="form-group row">
+                    <div class="col-md-12" [class.has-success]="!code.errors && code.touched" [class.has-danger]="code.errors && code.touched">
+                      <label for="recipient-code" class="form-control-label">Código:</label>
+                      <input type="text" id="recipient-code" placeholder="TC1020" class="form-control" maxlength="16" name="code" [(ngModel)]="course.code" #code="ngModel" [class.form-control-success]="!code.errors && code.touched" [class.form-control-danger]="code.errors && code.touched"
+                             required>
+                      <!-- Feedback -->
+                      <div *ngIf="code.errors && code.touched">
+                        <div [hidden]="!code.errors.required">
+                          <div class="text-danger">El código es obligatorio.</div>
+                        </div>
+                        <div [hidden]="!code.errors.maxlength">
+                          <div class="text-danger">El código excede la longitud permitida.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Name -->
+                  <div class="form-group row">
+                    <div class="col-md-12" [class.has-success]="!name.errors && name.touched" [class.has-danger]="name.errors && name.touched">
+                      <label for="recipient-name" class="form-control-label">Nombre:</label>
+                      <input type="text" id="recipient-name" placeholder="Bases de datos" class="form-control" minlength="5" maxlength="64" name="name" [(ngModel)]="course.name" #name="ngModel" [class.form-control-success]="!name.errors && name.touched" [class.form-control-danger]="name.errors && name.touched"
+                             required>
+                      <!-- Feedback -->
+                      <div *ngIf="name.errors && name.touched">
+                        <div [hidden]="!name.errors.required">
+                          <div class="text-danger">El nombre es obligatorio.</div>
+                        </div>
+                        <div [hidden]="!name.errors.minlength">
+                          <div class="text-danger">El nombre es menor a la longitud permitida.</div>
+                        </div>
+                        <div [hidden]="!name.errors.maxlength">
+                          <div class="text-danger">El nombre excede la longitud permitida.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Description -->
+                  <div class="form-group row" role="form">
+                    <div class="col-md-12" [class.has-success]="!description.errors && description.touched" [class.has-danger]="description.errors && description.touched">
+                      <label for="recipient-description" class="form-control-label">Descripción (opcional):</label>
+                      <div class="panel">
+                        <div class="panel-body mh0">
+                          <textarea class="form-control note-editor" maxlength="128" placeholder="Lorem ipsum" name="description" [(ngModel)]="course.description" #description="ngModel" rows="3"></textarea>
+                        </div>
+                      </div>
+                      <!-- Feedback -->
+                      <div *ngIf="description.errors && description.touched">
+                        <div [hidden]="!description.errors.maxlength">
+                          <div class="text-danger">La descripción excede la longitud permitida.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Units -->
+                  <div class="form-group row">
+                    <div class="col-md-12" [class.has-success]="!units.errors && units.touched" [class.has-danger]="units.errors && units.touched">
+                      <label for="recipient-code" class="form-control-label">Número de unidades:</label>
+                      <input type="number" id="recipient-units" placeholder="8" min="0" max="1000" class="form-control" name="units" [(ngModel)]="course.units" #units="ngModel" [class.form-control-success]="!units.errors && units.touched" [class.form-control-danger]="units.errors && units.touched"
+                             required>
+                      <!-- Feedback -->
+                      <div *ngIf="units.errors && units.touched">
+                        <div [hidden]="!units.errors.required">
+                          <div class="text-danger">El número de unidades es obligatorio.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Class hours -->
+                  <div class="form-group row">
+                    <div class="col-md-12" [class.has-success]="!class_hours.errors && class_hours.touched" [class.has-danger]="class_hours.errors && class_hours.touched">
+                      <label for="recipient-code" class="form-control-label">Número de horas de clase por semana:</label>
+                      <input type="number" id="recipient-class_hours" placeholder="8" min="0" max="1000" class="form-control" name="class_hours" [(ngModel)]="course.class_hours" #class_hours="ngModel" [class.form-control-success]="!class_hours.errors && class_hours.touched" [class.form-control-danger]="class_hours.errors && class_hours.touched"
+                             required>
+                      <!-- Feedback -->
+                      <div *ngIf="class_hours.errors && class_hours.touched">
+                        <div [hidden]="!class_hours.errors.required">
+                          <div class="text-danger">El número de horas de clase por semana es obligatorio.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Lab hours -->
+                  <div class="form-group row">
+                    <div class="col-md-12" [class.has-success]="!lab_hours.errors && lab_hours.touched" [class.has-danger]="lab_hours.errors && lab_hours.touched">
+                      <label for="recipient-code" class="form-control-label">Número de horas de laboratorio por semana:</label>
+                      <input type="number" id="recipient-lab_hours" placeholder="8" min="0" max="1000" class="form-control" name="lab_hours" [(ngModel)]="course.lab_hours" #lab_hours="ngModel" [class.form-control-success]="!lab_hours.errors && lab_hours.touched" [class.form-control-danger]="lab_hours.errors && lab_hours.touched"
+                             required>
+                      <!-- Feedback -->
+                      <div *ngIf="lab_hours.errors && lab_hours.touched">
+                        <div [hidden]="!lab_hours.errors.required">
+                          <div class="text-danger">El número de horas de laboratorio por semana es obligatorio.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Period -->
+                  <!-- <div class="form-group row">
+                    <div class="col-md-12">
+                      <label class="control-label">Periodo <a style="color:black; text-decoration:none" tooltip="¿A qué periodo del plan de estudios actual corresponde esta materia? (ej. Séptimo semestre)"><em class="icon-question"></em></a></label>
+                      <div>
+                        <select class="form-control" name="period" [(ngModel)]="course.period" #period="ngModel">
+                          <option selected>Primer semestre</option>
+                          <option>Segundo semestre</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <!-- <div class="form-group row" role="form">
+                    <div class="col-md-12">
+                      <label for="recipient-attributes" class="form-control-label">Restricciones <a style="color:black; text-decoration:none" tooltip="Materias obligatorias antes de llevar de esta materia"><em class="icon-question"></em></a></label>
+                      <ng-select (data)="value" [multiple]="true" [items]="items" [disabled]="disabled" (data)="refreshValue($event)" (selected)="selected($event)" (removed)="removed($event)" placeholder="No courses selected"></ng-select>
+                    </div>
+                  </div> -->
+
+                  <hr/>
+                  <button [disabled]="!courseForm.form.valid" *ngIf="action === 'create'" class="btn btn-block btn-info mt-lg" type="submit">Crear</button>
+                  <button [disabled]="!courseForm.form.valid" *ngIf="action === 'edit'" class="btn btn-block btn-info mt-lg" type="submit">Guardar</button>
+
+                </form>
+                <button *ngIf="action === 'edit'" class="btn btn-block btn-danger btn-outline mt-lg" (click)="deleteCourse(course)">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal to create or edit periods -->
+<div class="modal fade" bsModal #periodsModal="bs-modal" tabindex="-1" role="dialog" aria-labelledby="periodsModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" (click)="periodsModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Periodos</h4>
+      </div>
+      <div class="modal-body">
+        <!-- <form #periodsForm="ngForm" novalidate (ngSubmit)="submitPeriodsForm(periodsForm.value, periodsForm)">
+
+          <div class="form-group row" role="form">
+            <div class="col-md-12">
+              <label for="recipient-attributes" class="form-control-label">Periodos para actual plan de estudios (EL ORDEN EN QUE LOS AGREGUES ES IMPORTANTE) <a style="color:black; text-decoration:none" tooltip="Materias obligatorias antes de llevar de esta materia"><em class="icon-question"></em></a></label>
+              <ng-select (data)="value" [multiple]="true" [items]="periodList" [disabled]="disabled" (data)="refreshValue($event)" (selected)="selected($event)" (removed)="removed($event)" placeholder="No periods selected"></ng-select>
+            </div>
+          </div>
+          <hr/>
+          <button [disabled]="!periodsForm.form.valid" class="btn btn-block btn-info mt-lg" type="submit">Guardar</button>
+        </form> -->
+      </div>
+    </div>
+  </div>
+</div>

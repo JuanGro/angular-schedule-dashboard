@@ -1,0 +1,123 @@
+<!-- START panel-->
+<div class="panel b">
+    <div class="panel-body text-center">
+        <h2>{{ titlePage }}</h2>
+
+        <div class="container container-md">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Button to add a new study program -->
+                    <button class="btn btn-block btn-danger mt-lg" (click)="createStudyProgram(studyProgramForm)" (click)="studyProgramModal.show()">Crear nuevo plan de estudios</button>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div *ngIf="studyProgramList.length > 0">
+                    <div class="col-md-4" *ngFor="let studyProgramDetails of studyProgramList">
+                        <div class="plan">
+                            <h3 class="plan-header">{{ studyProgramDetails.name }}</h3>
+                            <ul class="plan-features">
+                                <li *ngIf="studyProgramDetails.status == true"><b>Estado: </b>Activo <em class="fa fa-check"></em></li>
+                                <li *ngIf="studyProgramDetails.status == false"><b>Estado: </b>Inactivo <em class="fa fa-times plan-feature-disable"></em></li>
+                                <li><b>Carrera: </b>{{ studyProgramDetails.career_code }}</li>
+                                <li><b>Descripción: </b>{{ studyProgramDetails.description }}</li>
+                                <li><b>Fecha de creación: </b>{{ studyProgramDetails.created_at }}</li>
+                                <li><b>Última edición: </b>{{ studyProgramDetails.updated_at }}</li>
+                            </ul>
+                            <div class="col-md-12">
+                                <a class="btn btn-block btn-info mt-lg" [routerLink]="['/career-director/study-program-edition', studyProgramDetails.name]">Ver</a>
+                                <button class="btn btn-block btn-warning mt-lg" (click)="editStudyProgram(studyProgramDetails, studyProgramForm)" (click)="studyProgramModal.show()">Editar</button>
+                            </div>
+                        </div>
+                        <hr/>
+                    </div>
+                </div>
+                <div *ngIf="studyProgramList.length === 0">
+                    <div class="col-md-12 text-center">
+                        <p>{{ messageIfNoStudyPrograms }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal to create or edit a study program -->
+<div class="modal fade" bsModal #studyProgramModal="bs-modal" tabindex="-1" role="dialog" aria-labelledby="studyProgramModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-label="Close" (click)="studyProgramModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Programa de estudios</h4>
+            </div>
+            <div class="modal-body">
+                <form #studyProgramForm="ngForm" novalidate (ngSubmit)="submitStudyProgramForm(studyProgramForm.value, studyProgramForm, studyProgramModal)">
+                    <!-- Name -->
+                    <div class="form-group row">
+                        <div class="col-md-12" [class.has-success]="!name.errors && name.touched" [class.has-danger]="name.errors && name.touched">
+                            <label for="recipient-name" class="form-control-label">Nombre:</label>
+                            <input type="text" id="recipient-name" placeholder="ISC11" class="form-control" minlength="5" maxlength="32" name="name" [(ngModel)]="studyProgram.name" #name="ngModel" [class.form-control-success]="!name.errors && name.touched" [class.form-control-danger]="name.errors && name.touched"
+                                required>
+                            <!-- Feedback name -->
+                            <div *ngIf="name.errors && name.touched">
+                                <div [hidden]="!name.errors.required">
+                                    <div class="text-danger">El nombre es obligatorio.</div>
+                                </div>
+                                <div [hidden]="!name.errors.minlength">
+                                    <div class="text-danger">El nombre es menor a la longitud permitida.</div>
+                                </div>
+                                <div [hidden]="!name.errors.maxlength">
+                                    <div class="text-danger">El nombre excede la longitud permitida.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <label class="control-label">Estado <a style="color:black; text-decoration:none" tooltip="Si decides que esté inactivo, ¡no podrá ser visualizado por nadie más!"><em class="icon-question"></em></a></label>
+                            <div>
+                                <select class="form-control" name="status" [(ngModel)]="studyProgram.status" #status="ngModel">
+                                  <option [ngValue]=true>Activo</option>
+                                  <option [ngValue]=false>Inactivo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group row" role="form">
+                        <div class="col-md-12" [class.has-success]="!description.errors && description.touched" [class.has-danger]="description.errors && description.touched">
+                            <label for="recipient-description" class="form-control-label">Descripción (opcional):</label>
+                            <div class="panel">
+                                <div class="panel-body mh0">
+                                    <textarea class="form-control note-editor" minlength="5" maxlength="128" placeholder="Lorem ipsum" name="description" [(ngModel)]="studyProgram.description" #description="ngModel" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <!-- Feedback description -->
+                            <div *ngIf="description.errors && description.touched">
+                                <!-- <div [hidden]="!description.errors.required">
+                                    <div class="text-danger">La descripción es obligatoria.</div>
+                                </div> -->
+                                <div [hidden]="!description.errors.minlength">
+                                    <div class="text-danger">La descripción es menor a la longitud permitida.</div>
+                                </div>
+                                <div [hidden]="!description.errors.maxlength">
+                                    <div class="text-danger">La descripción excede la longitud permitida.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <button [disabled]="!studyProgramForm.form.valid" *ngIf="action === 'create'" class="btn btn-block btn-info mt-lg" type="submit">Crear</button>
+                    <button [disabled]="!studyProgramForm.form.valid" *ngIf="action === 'edit'" class="btn btn-block btn-info mt-lg" type="submit">Guardar</button>
+                </form>
+
+                <button *ngIf="action === 'edit'" class="btn btn-block btn-danger btn-outline mt-lg" (click)="deleteStudyProgram(studyProgram)">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>

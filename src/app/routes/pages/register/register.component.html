@@ -1,0 +1,336 @@
+<div class="wrapper">
+    <div class="block-center mt-xl wd-85">
+
+        <!-- START panel-->
+        <div class="panel panel-info panel-flat">
+            <div class="panel-heading text-center">
+                <img class="img-responsive" src="assets/img/logo.svg" alt="App Logo" />
+            </div>
+
+            <div class="panel-body">
+                <p class="text-center pv">Regístrate para ingresar al sistema</p>
+
+                <!-- Start form -->
+                <!-- #registerForm="ngForm" calls the form methods to the component -->
+                <!-- (ngSubmit)="submitRegisterForm(registerForm.value)" executes the submitRegisterForm method sending the values of each field -->
+                <form #registerForm="ngForm" novalidate (ngSubmit)="submitRegisterForm(registerForm.value, registerForm)">
+
+                    <!-- First row -->
+                    <div class="form-group row">
+
+                        <!-- name field -->
+                        <div class="col-md-6" [class.has-success]="!name.errors && name.touched" [class.has-danger]="name.errors && name.touched">
+                            <label for="recipient-name" class="form-control-label">Nombre:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-user"></i></span>
+                                <input type="text" id="recipient-name" placeholder="Juan" class="form-control" minlength="3" maxlength="64" name="name" [(ngModel)]="student.name" #name="ngModel" [class.form-control-success]="!name.errors && name.touched" [class.form-control-danger]="name.errors && name.touched"
+                                    required>
+                            </div>
+
+                            <!-- Feedback name -->
+                            <div *ngIf="name.errors && name.touched">
+                                <div [hidden]="!name.errors.required">
+                                    <div class="text-danger">El nombre es obligatorio.</div>
+                                </div>
+                                <div [hidden]="!name.errors.minlength">
+                                    <div class="text-danger">El nombre dees menor a la longitud permitida.</div>
+                                </div>
+                                <div [hidden]="!name.errors.maxlength">
+                                    <div class="text-danger">El nombre excede la longitud permitida.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- last name field -->
+                        <div class="col-md-6" [class.has-success]="!last_name.errors && last_name.touched" [class.has-danger]="last_name.errors && last_name.touched">
+                            <label for="recipient-last_name" class="form-control-label">Apellido:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-user"></i></span>
+                                <input type="text" id="recipient-last_name" placeholder="Hernández" class="form-control" minlength="3" maxlength="64" name="last_name" [(ngModel)]="student.last_name" #last_name="ngModel" [class.form-control-success]="!last_name.errors && last_name.touched"
+                                    [class.form-control-danger]="last_name.errors && last_name.touched" required>
+                            </div>
+
+                            <!-- Feedback last_name -->
+                            <div *ngIf="last_name.errors && last_name.touched">
+                                <div [hidden]="!last_name.errors.required">
+                                    <div class="text-danger">El apellido es obligatorio.</div>
+                                </div>
+                                <div [hidden]="!last_name.errors.minlength">
+                                    <div class="text-danger">El apellido es menor a la longitud permitida.</div>
+                                </div>
+                                <div [hidden]="!last_name.errors.maxlength">
+                                    <div class="text-danger">El apellido excede la longitud permitida.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Second row -->
+                    <div class="form-group row">
+
+                        <!-- id_college field -->
+                        <div class="col-md-12" [class.has-success]="!id_college.errors && id_college.touched" [class.has-danger]="id_college.errors && id_college.touched">
+                            <label for="recipient-id_college" class="form-control-label">Correo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-envelope"></i>
+                            </span>
+                                <input type="text" id="recipient-id_college" placeholder="A01201234" class="form-control" minlength="9" maxlength="9" name="id_college" [(ngModel)]="student.id_college" #id_college="ngModel" [class.form-control-success]="!id_college.errors && id_college.touched"
+                                    [class.form-control-danger]="id_college.errors && id_college.touched" required>
+                                <span class="input-group-addon">{{ configuration.institutionalDomain }}</span>
+                            </div>
+
+                            <!-- Feedback id_college -->
+                            <div *ngIf="id_college.errors && id_college.touched">
+                                <div [hidden]="!id_college.errors.required">
+                                    <div class="text-danger">El correo es obligatorio.</div>
+                                </div>
+                                <div [hidden]="!id_college.errors.minlength">
+                                    <div class="text-danger">El correo debe ser igual a 9 caracteres.</div>
+                                </div>
+                                <div [hidden]="!id_college.errors.maxlength">
+                                    <div class="text-danger">El correo debe ser igual a 9 caracteres.</div>
+                                </div>
+                                <div [hidden]="!id_college.errors.pattern">
+                                    <div class="text-danger">El correo no es válido.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Third row -->
+                    <div class="form-group row">
+
+                        <div class="col-md-6" [class.has-success]="!password.errors && password.touched" [class.has-danger]="password.errors && password.touched">
+                            <!-- Password field -->
+                            <label for="recipient-password" class="form-control-label">Contraseña:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-lock"></i>
+                                                    </span>
+                                <input type="password" class="form-control" id="recipient-password" placeholder="********" minlength="8" maxlength="16" name="password" [(ngModel)]="student.password" #password="ngModel" [class.form-control-success]="!password.errors && password.touched"
+                                    [class.form-control-danger]="password.errors && password.touched" required>
+                            </div>
+                            <!-- Feedback password -->
+                            <div *ngIf="password.errors && password.touched">
+                                <div [hidden]="!password.errors.required">
+                                    <div class="text-danger">La contraseña es obligatoria.</div>
+                                </div>
+                                <div [hidden]="!password.errors.minlength">
+                                    <div class="text-danger">La contraseña es menor a la longitud permitida.</div>
+                                </div>
+                                <div [hidden]="!password.errors.maxlength">
+                                    <div class="text-danger">La contraseña excede la longitud permitida.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6" [class.has-success]="!password_confirmation.errors && password_confirmation.touched" [class.has-danger]="password_confirmation.errors && password_confirmation.touched">
+                            <!-- password_confirmation field -->
+                            <label for="recipient-password_confirmation" class="form-control-label">Confirma tu contraseña:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-lock"></i>
+                                                    </span>
+                                <input type="password" class="form-control" id="recipient-password_confirmation" placeholder="********" name="password_confirmation" [(ngModel)]="student.password_confirmation" appValidateEqual="password" #password_confirmation="ngModel" [class.form-control-success]="!password_confirmation.errors && password_confirmation.touched"
+                                    [class.form-control-danger]="password_confirmation.errors && password_confirmation.touched" required>
+                            </div>
+                            <!-- Feedback password_confirmation -->
+                            <div *ngIf="password_confirmation.errors && password_confirmation.touched">
+                                <div [hidden]="!password_confirmation.errors.required">
+                                    <div class="text-danger">La contraseña es obligatoria.</div>
+                                </div>
+                                <div [hidden]="password_confirmation.valid">
+                                    <div class="text-danger">La contraseñas no coinciden.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Fourth row -->
+                    <div class="form-group row">
+
+                        <!-- Career field -->
+                        <!--
+                        <div class="col-md-12">
+                            <label class="control-label">Carrera</label>
+                            <div>
+                                <select class="form-control" name="id_career" [(ngModel)]="student.id_career">
+                                -->
+                        <!-- Charge all careers -->
+                        <!--
+                                    <option>ISC - Ingeniero en sistemas computacionales</option>
+                                </select>
+                            </div>
+                        </div>
+                      -->
+
+                    </div>
+
+                    <!-- Fifth row -->
+                    <div class="form-group row">
+
+                        <!-- phone field -->
+                        <div class="col-md-6" [class.has-success]="!phone.errors && phone.touched" [class.has-danger]="phone.errors && phone.touched">
+                            <label for="recipient-phone" class="form-control-label">Teléfono:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-user"></i></span>
+                                <input type="text" id="recipient-phone" placeholder="4421112233" class="form-control" minlength="7" maxlength="32" name="phone" [(ngModel)]="student.phone" #phone="ngModel" [class.form-control-success]="!phone.errors && phone.touched" [class.form-control-danger]="phone.errors && phone.touched"
+                                    required>
+                            </div>
+
+                            <!-- Feedback phone -->
+                            <div *ngIf="phone.errors && phone.touched">
+                                <div [hidden]="!phone.errors.required">
+                                    <div class="text-danger">El teléfono es obligatorio.</div>
+                                </div>
+                                <div [hidden]="!phone.errors.minlength">
+                                    <div class="text-danger">El teléfono es menor a la longitud permitida.</div>
+                                </div>
+                                <div [hidden]="!phone.errors.maxlength">
+                                    <div class="text-danger">El teléfono excede la longitud permitida.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- nationality field -->
+                        <div class="col-md-6">
+                          <label class="control-label">Nacionalidad:</label>
+                          <div>
+                            <select class="form-control" name="nationality" [(ngModel)]="student.nationality" #nationality="ngModel">
+                              <option selected>Mexicana</option>
+                              <option>Otra</option>
+                            </select>
+                          </div>
+                        </div>
+                    </div>
+
+                    <!-- Sixth row -->
+                    <div class="form-group row">
+
+                        <div class="col-md-6" [class.has-success]="!birthday.errors && birthday.touched" [class.has-danger]="birthday.errors && birthday.touched">
+                            <!-- birthday field -->
+                            <label for="recipient-birthday" class="form-control-label">Fecha de nacimiento:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-lock"></i>
+                            </span>
+                                <input type="date" class="form-control" id="recipient-birthday" placeholder="dd/mm/yyyy" min="{{today.getTime() - 3155692600000 | date:'yyyy-MM-dd'}}" max="{{today.getTime() - 315569260000 | date:'yyyy-MM-dd'}}" name="birthday" [(ngModel)]="student.birthday" #birthday="ngModel"
+
+                                    [class.form-control-success]="!birthday.errors && birthday.touched" [class.form-control-danger]="birthday.errors && birthday.touched" required>
+                            </div>
+                            <!-- Feedback birthday -->
+                            <div *ngIf="birthday.errors && birthday.touched">
+                                <div [hidden]="!birthday.errors.required">
+                                    <div class="text-danger">La fecha de nacimiento es obligatoria.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6" [class.has-success]="!entry_date.errors && entry_date.touched" [class.has-danger]="entry_date.errors && entry_date.touched">
+                            <!-- entry_date field -->
+                            <label for="recipient-entry_date" class="form-control-label">Fecha de ingreso a la carrera (aproximado):</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-lock"></i>
+                            </span>
+                                <!-- 315569259747 are 10 years in miliseconds -->
+                                <input type="date" class="form-control" id="recipient-entry_date" placeholder="dd/mm/yyyy" min="{{today.getTime() - 315569260000 | date:'yyyy-MM-dd'}}" max="{{today.getTime() | date:'yyyy-MM-dd'}}" name="entry_date" [(ngModel)]="student.entry_date" #entry_date="ngModel"
+
+                                    [class.form-control-success]="!entry_date.errors && entry_date.touched" [class.form-control-danger]="entry_date.errors && entry_date.touched" required>
+                            </div>
+                            <!-- Feedback entry_date -->
+                            <div *ngIf="entry_date.errors && entry_date.touched">
+                                <div [hidden]="!entry_date.errors.required">
+                                    <div class="text-danger">La fecha aproximada de ingreso es obligatoria.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Seventh row -->
+                    <div class="form-group row">
+
+                        <!-- Gender field -->
+                        <div class="col-md-6">
+                            <label class="control-label">Género:</label>
+                            <div>
+                                <select class="form-control" name="gender" [(ngModel)]="student.gender" #gender="ngModel">
+                                    <option selected>Masculino</option>
+                                    <option>Femenino</option>
+                                    <option>Otro</option>
+                                 </select>
+                            </div>
+                        </div>
+
+                        <!-- Local field -->
+                        <div class="col-md-6">
+                            <label class="control-label">Estudiante <a style="color:black; text-decoration:none" tooltip="¿Te cambiaste de ciudad para estudiar esta carrera?"><em class="icon-question"></em></a></label>
+                            <div>
+                                <select class="form-control" name="local" [(ngModel)]="student.local" #local="ngModel">
+                                <option selected>Local</option>
+                                <option>Foráneo</option>
+                              </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Eight row -->
+                    <div class="form-group row">
+                      <!-- Gender field -->
+                      <div class="col-md-6">
+                        <label class="control-label">Instituto académico:</label>
+                        <div>
+                          <select class="form-control" name="organization" [(ngModel)]="student.organization" #organization="ngModel">
+                            <option selected>ITESM</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <!-- Gender field -->
+                      <div class="col-md-6">
+                        <label class="control-label">Campus:</label>
+                        <div>
+                          <select class="form-control" name="campus" [(ngModel)]="student.campus" #campus="ngModel">
+                            <option selected>Querétaro</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Eight row -->
+                    <div class="form-group row">
+                      <!-- Gender field -->
+                      <div class="col-md-6">
+                        <label class="control-label">Carrera:</label>
+                        <div>
+                          <select class="form-control" name="career" [(ngModel)]="student.career" #career="ngModel">
+                            <option selected>ISC</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <!-- Gender field -->
+                      <div class="col-md-6">
+                        <label class="control-label">Plan de estudios:</label>
+                        <div>
+                          <select class="form-control" name="study_program" [(ngModel)]="student.study_program" #study_program="ngModel">
+                            <option selected>ISC11</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Terms acceptance -->
+                    <p class="text-center">Al registrarme, estoy aceptando los <a (click)=configuration.privacyPolicy()>términos de privacidad</a></p>
+
+                    <button [disabled]="!registerForm.form.valid" class="btn btn-block btn-info mt-lg" type="submit">Crear cuenta</button>
+
+                </form>
+
+                <!-- <div class="alert alert-danger text-center"></div> -->
+                <p class="pt-lg text-center">¿Ya estabas registrado?</p><a class="btn btn-block btn-default" [routerLink]="'/login'">Ya tengo cuenta</a>
+            </div>
+        </div>
+    </div>
+</div>
